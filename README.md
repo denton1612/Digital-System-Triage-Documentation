@@ -1,18 +1,18 @@
 # Digital Triage System (DTS)
 
-## 🩺 Prezentare Generală
+## Prezentare Generală
 **Digital Triage System (DTS)** este o aplicație web inteligentă concepută pentru a automatiza și îmbunătăți procesul de triaj medical, cu un focus special pe spitalele din România. Soluția își propune să reducă timpii lungi de așteptare, erorile în clasificarea urgențelor și presiunea asupra personalului medical, înlocuind triajul complet manual cu unul asistat de Inteligența Artificială.
 
 Sistemul colectează datele vitale, simptomele și istoricul medical ale pacienților și estimează nivelul de urgență folosind algoritmi AI avansați. Personalul medical poate vizualiza apoi un tablou de bord (dashboard) actualizat în timp real, cu lista pacienților așezați în ordinea priorităților.
 
-### ✨ Funcționalități Principale
+### Funcționalități Principale
 1. **Formular digital de triaj** - Colectare automată de simptome, semne vitale și istoric medical.
 2. **Algoritm AI pentru clasificarea urgențelor** - Estimarea nivelului de urgență pe baza datelor.
 3. **Medical Dashboard** - Afișarea pacienților în ordinea priorității, cu actualizări live.
 4. **Autentificare și Role Management** - Acces securizat pentru medici, asistente și admini.
 5. **Integrare HIS/EMR** - Sincronizare cu sistemele existente ale spitalului.
 
-### 🛠 Tehnologii Utilizate
+### Tehnologii Utilizate
 * **Backend:** Python (FastAPI) - pentru API și logica de triaj AI.
 * **Frontend:** React + TypeScript - pentru o interfață web responsivă.
 * **Bază de Date:** PostgreSQL - pentru stocarea securizată.
@@ -20,7 +20,7 @@ Sistemul colectează datele vitale, simptomele și istoricul medical ale pacien�
 
 ---
 
-## 🧠 Implementarea AI (Arhitectură și Modele)
+## Implementarea AI (Arhitectură și Modele)
 
 Subsistemul de Inteligență Artificială a fost dezvoltat și testat pe baza setului de date **MIMIC-III** (cu peste 40.000 de pacienți de la terapie intensivă). Inputul principal al rețelelor neurale constă în note clinice textuale (precum simptomele principale - *Chief Complaint* și istoricul bolii curente - *History of Present Illness*).
 
@@ -49,23 +49,19 @@ Testele efectuate demonstrează capabilitatea sistemului de a înțelege *chief 
 
 ---
 
-## 👩‍💻 Contribuția Mea
+## Contribuția Mea (Denis Știube)
 
-<!-- 
-AICI TREBUIE SĂ COMPLETEZI CU CONTRIBUȚIA TA EFECTIVĂ LA PROIECT.
-Idei de completat:
-- Ce module ai dezvoltat (ex: Frontend, Backend API, antrenarea unui anumit model de AI, baza de date)?
-- Ce funcționalități specifice ai implementat?
-- Probleme întâlnite de tine și cum le-ai rezolvat?
--->
+În cadrul acestui proiect m-am ocupat în mod exclusiv de partea de Inteligență Artificială, concentrându-mă pe **Modulul de Direcționare (Specialist Routing)** folosind date din MIMIC-III. Responsabilitățile și realizările mele includ:
 
-* [Adaugă aici detalii despre rolul tău în cadrul echipei]
-* [Exemple: Am integrat modelul X în API-ul de FastAPI / Am creat dashboard-ul în React / Am lucrat la curățarea datelor din MIMIC-III, etc.]
-* [ ... ]
+* **Preprocesarea Avansată a Datelor Medicale:** Am dezvoltat un pipeline de preprocesare (RegEx + NLP) curățând zgomotul (abrevieri inutile, caractere speciale) din datele `chief_complaint`, `history_of_present_illness` și `past_medical_history`. Esențial, funcția dezvoltată de mine **reține negațiile medicale** (`no`, `denies`, `without`), salvând contextul semantic (ex: diferențierea dintre "chest pain" și "denies chest pain").
+* **Labeling Automatizat folosind BioBERT (Weak Supervision/Zero-Shot):** Având în vedere setul de date neetichetat direct pe specializări, am implementat un algoritm care definește 8 specializări (Cardiologie, Neurologie etc.) și am folosit embedding-urile extrase din **BioBERT** pentru a compara tabloul clinic al pacientului cu specializarea folosind **Cosine Similarity (accelerat pe GPU cu PyTorch)**.
+* **Fine-Tuning Optimizat pe BioBERT:** Am realizat fine-tuning pe modelul pre-antrenat `dmis-lab/biobert-base-cased-v1.2` pentru clasificarea specializărilor. Pentru a combate dezechilibrul claselor, am introdus ponderi balansate (`class_weight="balanced"`) direct în funcția de **CrossEntropyLoss**. De asemenea, am implementat optimizatorul `AdamW` cuplat cu un *learning rate scheduler* cu *warmup*.
+* **Evaluare și Profilarea Performanței:** Am generat metrici complete (`F1 Macro/Weighted`, Acuratețe) și matrice de confuzie pentru a analiza rata de succes per clasă medicală. Mai mult, am creat un modul pentru măsurarea latenței de inferență și a througput-ului (predicții/secundă) pentru a valida eficiența modelului în scenarii *real-time*.
+* **Integrarea Explicabilității (XAI) cu SHAP:** Pentru a combate fenomenul de "Black Box", am utilizat biblioteca **SHAP** pentru a vizualiza influența și importanța fiecărui token medical în obținerea predicției finale.
 
 ---
 
-## 👥 Echipa de Dezvoltare
+## Echipa de Dezvoltare
 Acest proiect de echipă a fost realizat de:
 * Țăpuc Delia
 * Titieni Paul
